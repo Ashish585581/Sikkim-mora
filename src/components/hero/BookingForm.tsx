@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { MapPin, Navigation, Calendar, Users, Briefcase, ArrowRight } from 'lucide-react';
+import { MapPin, Navigation, Calendar, Users, Briefcase, Car, ArrowRight } from 'lucide-react';
 import type { BookingFormData } from '../../utils/whatsapp';
 import { buildBookingWhatsAppUrl } from '../../utils/whatsapp';
 import { WhatsAppIcon } from '../common/WhatsAppIcon';
+import { vehicles } from '../../data/vehicles';
 
 const POPULAR_PICKUPS = [
   'Bagdogra Airport (IXB)',
@@ -48,7 +49,7 @@ export const BookingForm: React.FC = () => {
     travelDate: defaultDateStr,
     passengers: '2–4 Passengers',
     serviceType: 'Airport Transfer',
-    vehiclePreference: 'Innova Crysta / Sedan',
+    vehiclePreference: 'Any Vehicle / Best Available',
     additionalNotes: ''
   });
 
@@ -122,9 +123,10 @@ export const BookingForm: React.FC = () => {
               <div className="relative flex gap-1.5">
                 <input
                   type="text"
+                  maxLength={120}
                   placeholder="Enter specific pickup location..."
                   value={formData.pickupLocation}
-                  onChange={(e) => setFormData({ ...formData, pickupLocation: e.target.value })}
+                  onChange={(e) => setFormData({ ...formData, pickupLocation: e.target.value.slice(0, 120) })}
                   className="w-full bg-white border border-[#D2A14E] rounded-xl px-3.5 py-2.5 text-sm text-[#1F2937] focus:ring-2 focus:ring-[#D2A14E] focus:outline-none shadow-2xs"
                   required
                   autoFocus
@@ -176,9 +178,10 @@ export const BookingForm: React.FC = () => {
               <div className="relative flex gap-1.5">
                 <input
                   type="text"
+                  maxLength={120}
                   placeholder="Enter destination or sightseeing tour..."
                   value={formData.destination}
-                  onChange={(e) => setFormData({ ...formData, destination: e.target.value })}
+                  onChange={(e) => setFormData({ ...formData, destination: e.target.value.slice(0, 120) })}
                   className="w-full bg-white border border-[#D2A14E] rounded-xl px-3.5 py-2.5 text-sm text-[#1F2937] focus:ring-2 focus:ring-[#D2A14E] focus:outline-none shadow-2xs"
                   required
                   autoFocus
@@ -198,8 +201,8 @@ export const BookingForm: React.FC = () => {
           </div>
         </div>
 
-        {/* Row 2: Travel Date, Passengers, Service Type */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        {/* Row 2: Travel Date, Passengers, Service Type, Preferred Vehicle */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {/* Travel Date */}
           <div>
             <label className="block text-xs font-bold text-[#1F2937] uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
@@ -248,6 +251,26 @@ export const BookingForm: React.FC = () => {
               {SERVICE_TYPES.map((service) => (
                 <option key={service} value={service}>
                   {service}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Preferred Vehicle */}
+          <div>
+            <label className="block text-xs font-bold text-[#1F2937] uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
+              <Car className="w-3.5 h-3.5 text-[#596F59]" />
+              Preferred Vehicle
+            </label>
+            <select
+              value={formData.vehiclePreference}
+              onChange={(e) => setFormData({ ...formData, vehiclePreference: e.target.value })}
+              className="w-full bg-white border border-[#E3DAC9] rounded-xl px-3.5 py-2.5 text-sm font-medium text-[#1F2937] focus:ring-2 focus:ring-[#D2A14E] focus:border-[#D2A14E] focus:outline-none transition-all shadow-2xs"
+            >
+              <option value="Any Vehicle / Best Available">Any Vehicle / Best Available</option>
+              {vehicles.map((v) => (
+                <option key={v.id} value={`${v.name} (${v.startingPrice}/day)`}>
+                  {v.name} ({v.startingPrice}/day)
                 </option>
               ))}
             </select>

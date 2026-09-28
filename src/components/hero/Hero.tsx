@@ -5,6 +5,7 @@ import { Mountain, CheckCircle2, ArrowRight, Compass } from 'lucide-react';
 import { Badge } from '../common/Badge';
 import { getWhatsAppChatUrl } from '../../utils/whatsapp';
 import { WhatsAppIcon } from '../common/WhatsAppIcon';
+import { navigateTo } from '../../utils/navigation';
 
 interface HeroProps {
   onSelectVehicle?: (vehicle: Vehicle) => void;
@@ -91,7 +92,11 @@ export const Hero: React.FC<HeroProps> = () => {
               </a>
 
               <a
-                href="#cars"
+                href="/cabs"
+                onClick={(e) => {
+                  e.preventDefault();
+                  navigateTo('/cabs');
+                }}
                 className="inline-flex items-center justify-center gap-2 bg-white hover:bg-[#1F2937] hover:text-white border border-[#1F2937] text-[#1F2937] px-5 py-3.5 rounded-xl font-bold text-sm sm:text-base transition-all duration-200 cursor-pointer"
               >
                 <span>Explore Fleet</span>

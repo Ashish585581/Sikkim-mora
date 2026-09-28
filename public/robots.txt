@@ -1,0 +1,6 @@
+# robots.txt for https://sikkimora.com
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://sikkimora.com/sitemap.xml

@@ -9,6 +9,6 @@ export default defineConfig({
     tailwindcss(),
   ],
   server: {
-    host: true,
+    host: process.env.VITE_DEV_HOST === 'true' ? true : false,
   },
 })

@@ -7,17 +7,29 @@ import { WhatsAppIcon } from '../common/WhatsAppIcon';
 
 interface CarCardProps {
   vehicle: Vehicle;
+  displayName?: string;
   onViewDetails: (vehicle: Vehicle) => void;
 }
 
-export const CarCard: React.FC<CarCardProps> = ({ vehicle, onViewDetails }) => {
+export const CarCard: React.FC<CarCardProps> = ({ vehicle, displayName, onViewDetails }) => {
+  const vehicleTitle = displayName || vehicle.name;
+  const isContactPrice = vehicle.startingPrice.toLowerCase().includes('contact');
+  const dailyRate = isContactPrice
+    ? vehicle.startingPrice
+    : vehicle.startingPrice.includes('/day')
+      ? vehicle.startingPrice
+      : `${vehicle.startingPrice}/day`;
+
   return (
     <div className="bg-white rounded-2xl border border-[#E3DAC9] overflow-hidden shadow-2xs hover:shadow-xl transition-all duration-300 flex flex-col h-full group hover:border-[#22A657]">
       {/* Vehicle Image with Tag */}
       <div className="relative h-48 sm:h-52 w-full bg-[#F1ECE1] overflow-hidden">
         <img
           src={vehicle.image}
-          alt={vehicle.name}
+          alt={vehicleTitle}
+          onError={(e) => {
+            (e.target as HTMLImageElement).src = '/vehicle-placeholder.svg';
+          }}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
           loading="lazy"
         />
@@ -39,11 +51,10 @@ export const CarCard: React.FC<CarCardProps> = ({ vehicle, onViewDetails }) => {
           </div>
         )}
 
-        {/* Price Tag Overlay */}
-        <div className="absolute bottom-3 left-3 bg-[#16382C]/95 text-white px-3 py-1 rounded-lg text-xs font-bold border border-[#D2A14E]/40 flex items-center gap-1 shadow-md">
-          <span className="text-[#D2A14E] font-normal">Starting from</span>
-          <span className="text-sm font-extrabold text-[#F9F6F0]">{vehicle.startingPrice}</span>
-          <span className="text-[10px] text-white/80">{vehicle.priceUnit}</span>
+        {/* Price Tag Overlay with Per-day rental format */}
+        <div className="absolute bottom-3 left-3 bg-[#16382C]/95 text-white px-3 py-1.5 rounded-lg text-xs font-bold border border-[#D2A14E]/40 flex items-center gap-1.5 shadow-md">
+          <span className="text-[#D2A14E] text-[11px] font-medium">Per-day rental:</span>
+          <span className="text-sm font-extrabold text-[#F9F6F0]">{dailyRate}</span>
         </div>
       </div>
 
@@ -51,7 +62,7 @@ export const CarCard: React.FC<CarCardProps> = ({ vehicle, onViewDetails }) => {
       <div className="p-5 flex-1 flex flex-col justify-between">
         <div>
           <h3 className="text-lg font-bold text-[#1F2937] group-hover:text-[#22A657] transition-colors">
-            {vehicle.name}
+            {vehicleTitle}
           </h3>
           <p className="text-xs text-[#4B5563] mt-1.5 line-clamp-2 leading-relaxed">
             {vehicle.description}
@@ -74,14 +85,20 @@ export const CarCard: React.FC<CarCardProps> = ({ vehicle, onViewDetails }) => {
           </div>
 
           {/* Luggage Note */}
-          <div className="flex items-center gap-2 text-xs text-[#4B5563] mb-4">
+          <div className="flex items-center gap-2 text-xs text-[#4B5563] mb-3">
             <Luggage className="w-3.5 h-3.5 text-[#596F59] shrink-0" />
             <span className="truncate">{vehicle.luggage}</span>
+          </div>
+
+          {/* Prominent Per-day rental rate block */}
+          <div className="flex items-center justify-between bg-[#F9F6F0] px-3.5 py-2.5 rounded-xl border border-[#E3DAC9] mb-4 shadow-2xs">
+            <span className="text-xs font-bold text-[#4B5563] uppercase tracking-wider">Per-day rental</span>
+            <span className="text-base font-extrabold text-[#16382C]">{dailyRate}</span>
           </div>
         </div>
 
         {/* Action Buttons: View Details + Book Now */}
-        <div className="grid grid-cols-2 gap-2.5 pt-2">
+        <div className="grid grid-cols-2 gap-2.5 pt-1">
           <button
             type="button"
             onClick={() => onViewDetails(vehicle)}
@@ -92,7 +109,7 @@ export const CarCard: React.FC<CarCardProps> = ({ vehicle, onViewDetails }) => {
           </button>
 
           <a
-            href={buildCarBookingUrl(vehicle.name, vehicle.startingPrice)}
+            href={buildCarBookingUrl(vehicleTitle, dailyRate)}
             target="_blank"
             rel="noopener noreferrer"
             className="w-full inline-flex items-center justify-center gap-1.5 bg-[#22A657] hover:bg-[#1B8A48] text-white px-3 py-2.5 rounded-xl font-bold text-xs shadow-2xs hover:shadow-xs transition-all duration-200 active:scale-95 cursor-pointer"

@@ -34,6 +34,9 @@ export const VehicleSlider: React.FC<VehicleSliderProps> = ({ onSelectVehicleFor
   }, [isPaused, nextSlide]);
 
   const currentCar = sliderVehicles[currentIndex];
+  const dailyRate = currentCar.startingPrice.includes('/day')
+    ? currentCar.startingPrice
+    : `${currentCar.startingPrice}/day`;
 
   return (
     <div
@@ -67,6 +70,9 @@ export const VehicleSlider: React.FC<VehicleSliderProps> = ({ onSelectVehicleFor
               <img
                 src={currentCar.image}
                 alt={currentCar.name}
+                onError={(e) => {
+                  (e.target as HTMLImageElement).src = '/vehicle-placeholder.svg';
+                }}
                 className="w-full h-full object-cover transform transition-transform duration-700 hover:scale-105"
                 loading="eager"
               />
@@ -74,9 +80,8 @@ export const VehicleSlider: React.FC<VehicleSliderProps> = ({ onSelectVehicleFor
 
               {/* Price Tag Overlay on Image */}
               <div className="absolute bottom-3 left-3 bg-[#16382C]/95 backdrop-blur-sm text-white px-3 py-1.5 rounded-lg text-sm font-bold border border-[#D2A14E]/40 flex items-center gap-1.5 shadow-lg">
-                <span className="text-xs text-[#D2A14E] font-normal">From</span>
-                <span className="text-base text-[#F9F6F0]">{currentCar.startingPrice}</span>
-                <span className="text-[11px] text-[#F9F6F0]/80">{currentCar.priceUnit}</span>
+                <span className="text-xs text-[#D2A14E] font-medium">Per-day rental:</span>
+                <span className="text-base text-[#F9F6F0]">{dailyRate}</span>
               </div>
 
               {currentCar.popular && (
@@ -125,7 +130,7 @@ export const VehicleSlider: React.FC<VehicleSliderProps> = ({ onSelectVehicleFor
             {/* Action Buttons */}
             <div className="flex flex-col sm:flex-row items-stretch gap-2.5 pt-1">
               <a
-                href={buildCarBookingUrl(currentCar.name, currentCar.startingPrice)}
+                href={buildCarBookingUrl(currentCar.name, dailyRate)}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex-1 inline-flex items-center justify-center gap-2 bg-[#22A657] hover:bg-[#1B8A48] text-white px-4 py-2.5 rounded-xl font-bold text-sm shadow-sm hover:shadow-md transition-all duration-200 active:scale-95 cursor-pointer"

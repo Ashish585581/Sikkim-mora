@@ -31,6 +31,10 @@ export const CarDetailModal: React.FC<CarDetailModalProps> = ({ vehicle, onClose
 
   if (!vehicle) return null;
 
+  const dailyRate = vehicle.startingPrice.includes('/day')
+    ? vehicle.startingPrice
+    : `${vehicle.startingPrice}/day`;
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/70 backdrop-blur-sm animate-in fade-in duration-200">
       {/* Backdrop click listener */}
@@ -64,6 +68,9 @@ export const CarDetailModal: React.FC<CarDetailModalProps> = ({ vehicle, onClose
             <img
               src={vehicle.image}
               alt={vehicle.name}
+              onError={(e) => {
+                (e.target as HTMLImageElement).src = '/vehicle-placeholder.svg';
+              }}
               className="w-full h-full object-cover"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
@@ -77,10 +84,10 @@ export const CarDetailModal: React.FC<CarDetailModalProps> = ({ vehicle, onClose
                   {vehicle.tagline}
                 </p>
               </div>
-              <div className="text-right bg-[#16382C]/90 px-3 py-1.5 rounded-lg border border-[#D2A14E]/40 backdrop-blur-xs">
-                <div className="text-[10px] text-[#D2A14E] uppercase font-bold">Starting from</div>
+              <div className="text-right bg-[#16382C]/90 px-3.5 py-2 rounded-lg border border-[#D2A14E]/40 backdrop-blur-xs">
+                <div className="text-[10px] text-[#D2A14E] uppercase font-bold">Per-day rental</div>
                 <div className="text-lg font-extrabold text-[#F9F6F0]">
-                  {vehicle.startingPrice} <span className="text-xs font-normal text-white/80">{vehicle.priceUnit}</span>
+                  {dailyRate}
                 </div>
               </div>
             </div>
@@ -156,7 +163,7 @@ export const CarDetailModal: React.FC<CarDetailModalProps> = ({ vehicle, onClose
         {/* Modal Bottom Fixed CTA */}
         <div className="p-4 bg-[#F1ECE1] border-t border-[#E3DAC9] flex flex-col sm:flex-row items-center justify-between gap-3">
           <div className="text-xs text-[#4B5563] text-center sm:text-left">
-            <span className="font-semibold text-[#1F2937]">Sample starting price: {vehicle.startingPrice}</span>. Final fare depends on exact itinerary &amp; route.
+            <span className="font-semibold text-[#1F2937]">Per-day rental: {dailyRate}</span>. Final fare depends on exact itinerary &amp; route.
           </div>
           <div className="flex items-center gap-2 w-full sm:w-auto">
             <button
@@ -166,7 +173,7 @@ export const CarDetailModal: React.FC<CarDetailModalProps> = ({ vehicle, onClose
               Close
             </button>
             <a
-              href={buildCarBookingUrl(vehicle.name, vehicle.startingPrice)}
+              href={buildCarBookingUrl(vehicle.name, dailyRate)}
               target="_blank"
               rel="noopener noreferrer"
               className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 bg-[#22A657] hover:bg-[#1B8A48] text-white border border-[#1B8A48] px-5 py-2.5 rounded-xl font-bold text-xs shadow-md hover:shadow-lg transition-all duration-200 active:scale-95 cursor-pointer group"

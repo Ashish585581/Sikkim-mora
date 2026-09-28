@@ -4,24 +4,44 @@ import { siteConfig } from '../../config/siteConfig';
 import { getWhatsAppChatUrl } from '../../utils/whatsapp';
 import { WhatsAppIcon } from '../common/WhatsAppIcon';
 
+import { useCurrentPath, navigateTo } from '../../utils/navigation';
+
 export const Header: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('#hero');
+  const currentPath = useCurrentPath();
 
   const navLinks = [
-    { name: 'Home', href: '#hero' },
-    { name: 'Our Cars', href: '#cars' },
-    { name: 'Services', href: '#services' },
-    { name: 'Taxi Fares', href: '#pricing' },
-    { name: 'Destinations', href: '#destinations' },
-    { name: 'Packages', href: '#packages' },
-    { name: 'Why Us', href: '#why-choose-us' },
-    { name: 'Reviews', href: '#testimonials' },
-    { name: 'Contact', href: '#contact' },
+    { name: 'Home', href: '#hero', path: '/' },
+    { name: 'Our Cabs', href: '/cabs', path: '/cabs' },
+    { name: 'Services', href: '#services', path: '/' },
+    { name: 'Taxi Fares', href: '/taxi-fares', path: '/taxi-fares' },
+    { name: 'Destinations', href: '#destinations', path: '/' },
+    { name: 'Packages', href: '/packages', path: '/packages' },
+    { name: 'Why Us', href: '#why-choose-us', path: '/' },
+    { name: 'Reviews', href: '#testimonials', path: '/' },
+    { name: 'Contact', href: '#contact', path: '/' },
   ];
 
   useEffect(() => {
+    if (currentPath === '/cabs') {
+      setActiveSection('/cabs');
+      return;
+    }
+    if (currentPath === '/packages') {
+      setActiveSection('/packages');
+      return;
+    }
+    if (currentPath === '/taxi-fares') {
+      setActiveSection('/taxi-fares');
+      return;
+    }
+    if (currentPath === '/our-founder') {
+      setActiveSection('');
+      return;
+    }
+
     const handleScroll = () => {
       if (window.scrollY > 20) {
         setIsScrolled(true);
@@ -29,15 +49,16 @@ export const Header: React.FC = () => {
         setIsScrolled(false);
       }
 
-      // Track active section based on scroll position
+      // Track active section based on scroll position on homepage
       const scrollPosition = window.scrollY + 140;
-      for (let i = navLinks.length - 1; i >= 0; i--) {
-        const targetId = navLinks[i].href.substring(1);
+      const hashLinks = navLinks.filter(l => l.href.startsWith('#'));
+      for (let i = hashLinks.length - 1; i >= 0; i--) {
+        const targetId = hashLinks[i].href.substring(1);
         const section = document.getElementById(targetId);
         if (section) {
           const top = section.offsetTop;
           if (scrollPosition >= top) {
-            setActiveSection(navLinks[i].href);
+            setActiveSection(hashLinks[i].href);
             return;
           }
         }
@@ -47,20 +68,42 @@ export const Header: React.FC = () => {
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [currentPath]);
 
-  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, link: typeof navLinks[0]) => {
     e.preventDefault();
-    setActiveSection(href);
     setMobileMenuOpen(false);
-    const targetId = href.replace('#', '');
-    const element = document.getElementById(targetId);
-    if (element) {
-      const offsetTop = element.getBoundingClientRect().top + window.scrollY - 80;
-      window.scrollTo({
-        top: offsetTop,
-        behavior: 'smooth',
-      });
+
+    if (link.href === '/cabs' || link.href === '/packages' || link.href === '/taxi-fares') {
+      setActiveSection(link.href);
+      navigateTo(link.href);
+      return;
+    }
+
+    // Hash link
+    setActiveSection(link.href);
+    if (currentPath !== '/') {
+      navigateTo('/', link.href);
+    } else {
+      const targetId = link.href.replace('#', '');
+      const element = document.getElementById(targetId);
+      if (element) {
+        const offsetTop = element.getBoundingClientRect().top + window.scrollY - 80;
+        window.scrollTo({
+          top: offsetTop,
+          behavior: 'smooth',
+        });
+      }
+    }
+  };
+
+  const handleLogoClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    setMobileMenuOpen(false);
+    if (currentPath === '/') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      navigateTo('/');
     }
   };
 
@@ -104,8 +147,8 @@ export const Header: React.FC = () => {
         <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-3 lg:gap-4 box-border">
           {/* LEFT: SIKKIMORA CAB SERVICE Brand Logo */}
           <a
-            href="#hero"
-            onClick={(e) => handleNavClick(e, '#hero')}
+            href="/"
+            onClick={handleLogoClick}
             className="flex items-center gap-2.5 group shrink-0"
             aria-label="Sikkimora Cab Service"
           >
@@ -133,7 +176,7 @@ export const Header: React.FC = () => {
                 <a
                   key={link.name}
                   href={link.href}
-                  onClick={(e) => handleNavClick(e, link.href)}
+                  onClick={(e) => handleNavClick(e, link)}
                   className={`px-2 xl:px-2.5 py-1.5 rounded-md text-[12.5px] xl:text-[13px] font-medium whitespace-nowrap transition-colors duration-150 ${
                     isActive
                       ? 'bg-[#F5E8D0] text-[#1F2937] font-bold shadow-2xs'
@@ -216,7 +259,7 @@ export const Header: React.FC = () => {
                   <a
                     key={link.name}
                     href={link.href}
-                    onClick={(e) => handleNavClick(e, link.href)}
+                    onClick={(e) => handleNavClick(e, link)}
                     className={`px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
                       isActive
                         ? 'bg-[#F5E8D0] text-[#1F2937] font-bold'

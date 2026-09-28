@@ -36,7 +36,7 @@ export const testimonials: Testimonial[] = [
     location: 'Mumbai, MH',
     rating: 5,
     routeTaken: 'Darjeeling Local Sightseeing & Tiger Hill',
-    vehicleUsed: 'Swift Dzire Sedan',
+    vehicleUsed: 'Dzire Sedan',
     date: 'December 2025',
     review: 'Prompt 4:00 AM hotel pickup for Tiger Hill sunrise! Clean car, warm heater, and the driver pointed out the best tea shops along the way. Fair, transparent pricing.'
   },

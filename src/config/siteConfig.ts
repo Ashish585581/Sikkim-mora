@@ -1,6 +1,7 @@
 export interface SiteConfig {
   name: string;
   shortName: string;
+  siteUrl: string;
   tagline: string;
   phone: string;
   phoneDisplay: string;
@@ -31,15 +32,23 @@ export interface SiteConfig {
   };
 }
 
+const configuredPhone = (import.meta as any).env?.VITE_PHONE_NUMBER || "+919876543210";
+const configuredPhoneDisplay = (import.meta as any).env?.VITE_PHONE_DISPLAY || "+91 98765 43210";
+const configuredWhatsApp = (import.meta as any).env?.VITE_WHATSAPP_NUMBER || "919876543210";
+const configuredWhatsAppDisplay = (import.meta as any).env?.VITE_WHATSAPP_DISPLAY || "+91 98765 43210";
+const configuredEmail = (import.meta as any).env?.VITE_EMAIL || "info@example.com";
+const configuredSiteUrl = (import.meta as any).env?.VITE_SITE_URL || "https://sikkimora.com";
+
 export const siteConfig: SiteConfig = {
   name: "SIKKIMORA CAB SERVICE",
   shortName: "SIKKIMORA CAB SERVICE",
+  siteUrl: configuredSiteUrl,
   tagline: "Reliable Car Rental & Taxi Services across Darjeeling, Sikkim & Kalimpong",
-  phone: "+919876543210",
-  phoneDisplay: "+91 98765 43210",
-  whatsappNumber: "919876543210", // Single configuration location for WhatsApp number
-  whatsappDisplay: "+91 98765 43210",
-  email: "info@example.com",
+  phone: configuredPhone,
+  phoneDisplay: configuredPhoneDisplay,
+  whatsappNumber: configuredWhatsApp, // Single configuration location for WhatsApp number
+  whatsappDisplay: configuredWhatsAppDisplay,
+  email: configuredEmail,
   address: {
     line1: "Near Mall Road / Taxi Stand",
     area: "Gandhi Road",
@@ -60,6 +69,6 @@ export const siteConfig: SiteConfig = {
     facebook: "https://facebook.com",
     instagram: "https://instagram.com",
     twitter: "https://x.com",
-    whatsapp: "https://wa.me/919876543210"
+    whatsapp: `https://wa.me/${configuredWhatsApp}`
   }
 };

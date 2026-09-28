@@ -3,6 +3,7 @@ import { Compass, Phone, Mail, MapPin, Clock, ArrowUp } from 'lucide-react';
 import { siteConfig } from '../../config/siteConfig';
 import { getWhatsAppChatUrl } from '../../utils/whatsapp';
 import { WhatsAppIcon } from '../common/WhatsAppIcon';
+import { navigateTo } from '../../utils/navigation';
 
 export const Footer: React.FC = () => {
   const scrollToTop = () => {
@@ -12,14 +13,23 @@ export const Footer: React.FC = () => {
     });
   };
 
+  const handleNav = (e: React.MouseEvent, path: string, hash?: string) => {
+    e.preventDefault();
+    navigateTo(path, hash);
+  };
+
   return (
     <footer id="contact" className="bg-[#16382C] text-[#F9F6F0] pt-16 pb-12 border-t border-[#D2A14E]/20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-8 mb-12">
           {/* Col 1: About Business */}
           <div className="space-y-4">
-            <div className="flex items-center gap-2.5">
-              <div className="w-10 h-10 rounded-lg bg-[#0F261E] flex items-center justify-center text-[#D2A14E] border border-[#D2A14E]/30">
+            <a
+              href="/"
+              onClick={(e) => handleNav(e, '/')}
+              className="flex items-center gap-2.5 group cursor-pointer inline-flex"
+            >
+              <div className="w-10 h-10 rounded-lg bg-[#0F261E] flex items-center justify-center text-[#D2A14E] border border-[#D2A14E]/30 group-hover:scale-105 transition-transform">
                 <Compass className="w-6 h-6" />
               </div>
               <div>
@@ -30,7 +40,7 @@ export const Footer: React.FC = () => {
                   Darjeeling & Sikkim Car Rental
                 </p>
               </div>
-            </div>
+            </a>
 
             <p className="text-[#F9F6F0]/80 text-sm leading-relaxed">
               Professional, trustworthy car rental and taxi service across Darjeeling, Kalimpong, Gangtok, Nathula Pass, and Bagdogra Airport. Well-maintained cars with certified mountain chauffeurs.
@@ -84,43 +94,84 @@ export const Footer: React.FC = () => {
             </h3>
             <ul className="space-y-2 text-sm text-[#F9F6F0]/85">
               <li>
-                <a href="#hero" className="hover:text-[#D2A14E] transition-colors">
+                <a
+                  href="/"
+                  onClick={(e) => handleNav(e, '/', '#hero')}
+                  className="hover:text-[#D2A14E] transition-colors cursor-pointer"
+                >
                   Home
                 </a>
               </li>
               <li>
-                <a href="#cars" className="hover:text-[#D2A14E] transition-colors">
-                  Our Fleet & Cars
+                <a
+                  href="/cabs"
+                  onClick={(e) => handleNav(e, '/cabs')}
+                  className="hover:text-[#D2A14E] transition-colors cursor-pointer"
+                >
+                  Our Cabs (Fleet)
                 </a>
               </li>
               <li>
-                <a href="#services" className="hover:text-[#D2A14E] transition-colors">
-                  Taxi & Rental Services
+                <a
+                  href="/#services"
+                  onClick={(e) => handleNav(e, '/', '#services')}
+                  className="hover:text-[#D2A14E] transition-colors cursor-pointer"
+                >
+                  Taxi &amp; Rental Services
                 </a>
               </li>
               <li>
-                <a href="#pricing" className="hover:text-[#D2A14E] transition-colors">
-                  Taxi Fares & Pricing
+                <a
+                  href="/taxi-fares"
+                  onClick={(e) => handleNav(e, '/taxi-fares')}
+                  className="hover:text-[#D2A14E] transition-colors cursor-pointer"
+                >
+                  Taxi Fares &amp; Pricing
                 </a>
               </li>
               <li>
-                <a href="#destinations" className="hover:text-[#D2A14E] transition-colors">
+                <a
+                  href="/#destinations"
+                  onClick={(e) => handleNav(e, '/', '#destinations')}
+                  className="hover:text-[#D2A14E] transition-colors cursor-pointer"
+                >
                   Popular Destinations
                 </a>
               </li>
               <li>
-                <a href="#packages" className="hover:text-[#D2A14E] transition-colors">
+                <a
+                  href="/packages"
+                  onClick={(e) => handleNav(e, '/packages')}
+                  className="hover:text-[#D2A14E] transition-colors cursor-pointer"
+                >
                   Tour Packages
                 </a>
               </li>
               <li>
-                <a href="#why-choose-us" className="hover:text-[#D2A14E] transition-colors">
+                <a
+                  href="/#why-choose-us"
+                  onClick={(e) => handleNav(e, '/', '#why-choose-us')}
+                  className="hover:text-[#D2A14E] transition-colors cursor-pointer"
+                >
                   Why Choose Us
                 </a>
               </li>
               <li>
-                <a href="#testimonials" className="hover:text-[#D2A14E] transition-colors">
+                <a
+                  href="/#testimonials"
+                  onClick={(e) => handleNav(e, '/', '#testimonials')}
+                  className="hover:text-[#D2A14E] transition-colors cursor-pointer"
+                >
                   Customer Reviews
+                </a>
+              </li>
+              <li>
+                <a
+                  href="/our-founder"
+                  onClick={(e) => handleNav(e, '/our-founder')}
+                  className="hover:text-[#D2A14E] transition-colors cursor-pointer"
+                >
+                  Our Founder
                 </a>
               </li>
             </ul>
